@@ -5,7 +5,7 @@ import { adminAuth } from '@/lib/firebase-admin';
 export async function PATCH(
   request: Request,
   { params }: { params: { uid: string } }
-) {
+): Promise<NextResponse> {
   try {
     const { isAdmin } = await request.json();
     

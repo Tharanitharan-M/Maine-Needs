@@ -5,7 +5,7 @@ import { adminAuth } from '@/lib/firebase-admin';
 export async function DELETE(
   request: Request,
   { params }: { params: { uid: string } }
-) {
+): Promise<NextResponse> {
   try {
     await adminAuth.deleteUser(params.uid);
     return NextResponse.json({ message: 'User deleted successfully' });
