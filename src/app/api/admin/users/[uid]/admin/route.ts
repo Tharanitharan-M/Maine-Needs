@@ -4,17 +4,17 @@ import { adminAuth } from '@/lib/firebase-admin';
 // PATCH /api/admin/users/[uid]/admin - Toggle admin status
 export async function PATCH(
   request: NextRequest,
-  context: { params: { uid: string } }
+  { params }: { params: { uid: string } }
 ): Promise<NextResponse> {
   try {
     const { isAdmin } = await request.json();
     
     // Get current user claims
-    const user = await adminAuth.getUser(context.params.uid);
+    const user = await adminAuth.getUser(params.uid);
     const currentClaims = user.customClaims || {};
     
     // Update admin claim
-    await adminAuth.setCustomUserClaims(context.params.uid, {
+    await adminAuth.setCustomUserClaims(params.uid, {
       ...currentClaims,
       admin: isAdmin
     });

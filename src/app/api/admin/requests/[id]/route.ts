@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 // PATCH /api/admin/requests/[id] - Update request status
 export async function PATCH(
   request: NextRequest,
-  context: { params: { id: string } }
+  { params }: { params: { id: string } }
 ): Promise<NextResponse> {
   try {
     const { status } = await request.json();
