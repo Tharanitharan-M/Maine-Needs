@@ -1,9 +1,9 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { adminAuth } from '@/lib/firebase-admin';
 
 // PATCH /api/admin/users/[uid]/admin - Toggle admin status
 export async function PATCH(
-  request: Request,
+  request: NextRequest,
   { params }: { params: { uid: string } }
 ): Promise<NextResponse> {
   try {

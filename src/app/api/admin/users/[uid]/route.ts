@@ -1,9 +1,9 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { adminAuth } from '@/lib/firebase-admin';
 
 // DELETE /api/admin/users/[uid] - Delete a user
 export async function DELETE(
-  request: Request,
+  request: NextRequest,
   { params }: { params: { uid: string } }
 ): Promise<NextResponse> {
   try {
