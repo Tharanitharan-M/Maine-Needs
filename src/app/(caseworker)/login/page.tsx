@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import { signInWithEmailAndPassword} from 'firebase/auth';
 import { auth } from '@/lib/firebase';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -29,19 +29,6 @@ export default function LoginPage() {
     e.preventDefault();
     try {
       await signInWithEmailAndPassword(auth, email, password);
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        setError(error.message);
-      } else {
-        setError('An unknown error occurred.');
-      }
-    }
-  };
-
-  const handleGoogleLogin = async () => {
-    try {
-      const provider = new GoogleAuthProvider();
-      await signInWithPopup(auth, provider);
     } catch (error: unknown) {
       if (error instanceof Error) {
         setError(error.message);
@@ -158,30 +145,6 @@ export default function LoginPage() {
             </form>
             <div className="mt-6 text-center text-xs text-gray-500">
               Need access? Ask your Maine Needs contact or email <a href="mailto:support@maineneeds.org" className="underline">support@maineneeds.org</a>.
-            </div>
-            <div className="mt-6">
-              <div className="relative">
-                <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-gray-300" />
-                </div>
-                <div className="relative flex justify-center text-sm">
-                  <span className="px-2 bg-white text-gray-500">Or continue with</span>
-                </div>
-              </div>
-              <div className="mt-6">
-                <button
-                  onClick={handleGoogleLogin}
-                  className="w-full flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#0066CC]"
-                >
-                  <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24">
-                    <path
-                      fill="currentColor"
-                      d="M12.545,10.239v3.821h5.445c-0.712,2.315-2.647,3.972-5.445,3.972c-3.332,0-6.033-2.701-6.033-6.032s2.701-6.032,6.033-6.032c1.498,0,2.866,0.549,3.921,1.453l2.814-2.814C17.503,2.988,15.139,2,12.545,2C7.021,2,2.543,6.477,2.543,12s4.478,10,10.002,10c8.396,0,10.249-7.85,9.426-11.748L12.545,10.239z"
-                    />
-                  </svg>
-                  Sign in with Google
-                </button>
-              </div>
             </div>
           </div>
         </div>
