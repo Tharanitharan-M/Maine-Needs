@@ -149,6 +149,9 @@ export default function LoginPage() {
                 </button>
               </div>
             </form>
+            <div className="mt-6 text-center text-xs text-gray-500">
+              Need access? Ask your Maine Needs contact or email <a href="mailto:support@maineneeds.org" className="underline">support@maineneeds.org</a>.
+            </div>
             <div className="mt-6">
               <div className="relative">
                 <div className="absolute inset-0 flex items-center">

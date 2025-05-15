@@ -1,15 +1,16 @@
-import { initializeApp } from 'firebase/app';
+import { initializeApp, getApps } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDtwTNPnERtXXfiblK_feggZjdSMJkLGyM",
-  authDomain: "maineneeds-f995f.firebaseapp.com",
-  projectId: "maineneeds-f995f",
-  storageBucket: "maineneeds-f995f.firebasestorage.app",
-  messagingSenderId: "811800552624",
-  appId: "1:811800552624:web:12178034d1f81003d3c775",
-  measurementId: "G-3ZY5FDPZ0S"
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
+  measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
 };
 
-const app = initializeApp(firebaseConfig);
-export const auth = getAuth(app); 
+const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
+export const auth = getAuth(app);
+export default app; 
