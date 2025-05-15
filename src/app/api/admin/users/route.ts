@@ -1,8 +1,10 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { adminAuth } from '@/lib/firebase-admin';
 
 // GET /api/admin/users - List all users
-export async function GET() {
+export async function GET(
+  request: NextRequest
+): Promise<NextResponse> {
   try {
     const listUsersResult = await adminAuth.listUsers();
     const users = listUsersResult.users.map(user => ({
@@ -23,7 +25,9 @@ export async function GET() {
 }
 
 // POST /api/admin/users - Create a new user
-export async function POST(request: Request) {
+export async function POST(
+  request: NextRequest
+): Promise<NextResponse> {
   try {
     const { email, name, isAdmin } = await request.json();
 
