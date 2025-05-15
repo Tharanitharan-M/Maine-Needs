@@ -6,6 +6,7 @@ import { auth } from '@/lib/firebase';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { onAuthStateChanged } from 'firebase/auth';
+import { toast } from 'sonner';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -54,12 +55,18 @@ export default function LoginPage() {
     setResetMessage('');
     try {
       await signInWithEmailAndPassword(auth, email, password);
+      toast.success('Login successful!');
+      setTimeout(() => {
+        router.replace('/form');
+      }, 500); // Give toast a moment to show
     } catch (error: unknown) {
       if (error instanceof Error) {
         const errorCode = (error as any).code || 'unknown';
         setError(getErrorMessage(errorCode));
+        toast.error(getErrorMessage(errorCode));
       } else {
         setError('An unexpected error occurred');
+        toast.error('An unexpected error occurred');
       }
     }
   };
@@ -79,8 +86,10 @@ export default function LoginPage() {
       if (error instanceof Error) {
         const errorCode = (error as any).code || 'unknown';
         setError(getErrorMessage(errorCode));
+        toast.error(getErrorMessage(errorCode));
       } else {
         setError('An unexpected error occurred');
+        toast.error('An unexpected error occurred');
       }
     }
   };
