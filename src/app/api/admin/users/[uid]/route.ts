@@ -4,10 +4,10 @@ import { adminAuth } from '@/lib/firebase-admin';
 // DELETE /api/admin/users/[uid] - Delete a user
 export async function DELETE(
   request: Request,
-  { params }: { params: { uid: string } }
+  context: { params: { uid: string } }
 ) {
   try {
-    await adminAuth.deleteUser(params.uid);
+    await adminAuth.deleteUser(context.params.uid);
     return NextResponse.json({ message: 'User deleted successfully' });
   } catch (error) {
     console.error('Error deleting user:', error);
