@@ -56,7 +56,8 @@ export default function LoginPage() {
       await signInWithEmailAndPassword(auth, email, password);
     } catch (error: unknown) {
       if (error instanceof Error) {
-        setError(error.message);
+        const errorCode = (error as any).code || 'unknown';
+        setError(getErrorMessage(errorCode));
       } else {
         setError('An unexpected error occurred');
       }
@@ -76,7 +77,8 @@ export default function LoginPage() {
       setResetMessage('Password reset email sent! Please check your inbox.');
     } catch (error: unknown) {
       if (error instanceof Error) {
-        setError(error.message);
+        const errorCode = (error as any).code || 'unknown';
+        setError(getErrorMessage(errorCode));
       } else {
         setError('An unexpected error occurred');
       }
