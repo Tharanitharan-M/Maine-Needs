@@ -23,11 +23,10 @@ export async function POST(request: Request) {
     return NextResponse.json({
       message: `Success! ${email} has been set as an admin.`
     });
-  } catch (error: any) {
-    console.error('Error setting admin:', error);
-    return NextResponse.json(
-      { error: error.message },
-      { status: 500 }
-    );
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+    return NextResponse.json({ error: 'An unexpected error occurred' }, { status: 500 });
   }
 } 

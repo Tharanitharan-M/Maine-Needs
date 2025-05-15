@@ -54,9 +54,12 @@ export default function LoginPage() {
     setResetMessage('');
     try {
       await signInWithEmailAndPassword(auth, email, password);
-    } catch (error: any) {
-      const errorCode = error?.code || 'unknown';
-      setError(getErrorMessage(errorCode));
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError('An unexpected error occurred');
+      }
     }
   };
 
@@ -71,14 +74,11 @@ export default function LoginPage() {
     try {
       await sendPasswordResetEmail(auth, email);
       setResetMessage('Password reset email sent! Please check your inbox.');
-    } catch (error: any) {
-      const errorCode = error?.code || 'unknown';
-      if (errorCode === 'auth/user-not-found') {
-        setError('No account found with this email address.');
-      } else if (errorCode === 'auth/invalid-email') {
-        setError('Please enter a valid email address.');
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        setError(error.message);
       } else {
-        setError('Failed to send password reset email. Please try again.');
+        setError('An unexpected error occurred');
       }
     }
   };
