@@ -1,8 +1,27 @@
+"use client";
 import Image from "next/image";
+import { signOut } from "firebase/auth";
+import { auth } from "@/lib/firebase";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    await signOut(auth);
+    router.push("/login");
+  };
+
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
+      <div className="w-full flex justify-end">
+        <button
+          onClick={handleLogout}
+          className="bg-[#003366] text-white px-4 py-2 rounded hover:bg-[#0052A3] font-semibold mt-2 mb-4"
+        >
+          Logout
+        </button>
+      </div>
       <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
         <Image
           className="dark:invert"

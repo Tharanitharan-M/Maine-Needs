@@ -27,7 +27,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       
       // Redirect based on auth state
       if (user) {
-        router.push('/dashboard'); // Redirect to dashboard when logged in
+        router.push('/'); // Redirect to dashboard when logged in
       } else {
         router.push('/login'); // Redirect to login when logged out
       }

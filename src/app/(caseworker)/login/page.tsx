@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { signInWithEmailAndPassword} from 'firebase/auth';
+import { signInWithEmailAndPassword, sendPasswordResetEmail } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -11,6 +11,7 @@ export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [resetMessage, setResetMessage] = useState('');
   const router = useRouter();
 
   useEffect(() => {
@@ -27,8 +28,30 @@ export default function LoginPage() {
 
   const handleEmailLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError('');
+    setResetMessage('');
     try {
       await signInWithEmailAndPassword(auth, email, password);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError('An unknown error occurred.');
+      }
+    }
+  };
+
+  const handleForgotPassword = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    setError('');
+    setResetMessage('');
+    if (!email) {
+      setError('Please enter your email address above first.');
+      return;
+    }
+    try {
+      await sendPasswordResetEmail(auth, email);
+      setResetMessage('Password reset email sent! Please check your inbox.');
     } catch (error: unknown) {
       if (error instanceof Error) {
         setError(error.message);
@@ -129,11 +152,14 @@ export default function LoginPage() {
                   </label>
                 </div>
                 <div className="text-sm">
-                  <a href="#" className="font-medium text-[#0066CC] hover:text-[#0052A3]">
+                  <a href="#" onClick={handleForgotPassword} className="font-medium text-[#0066CC] hover:text-[#0052A3]">
                     Forgot your password?
                   </a>
                 </div>
               </div>
+              {resetMessage && (
+                <div className="mt-2 text-green-600 text-sm text-center">{resetMessage}</div>
+              )}
               <div>
                 <button
                   type="submit"
