@@ -34,53 +34,52 @@ export default function FormPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F5F7FA]">
+    <div className="relative min-h-screen flex overflow-hidden bg-gradient-to-br from-[#e0e7ff] via-[#f5f7fa] to-[#c7d2fe]">
+      {/* Animated floating shapes background */}
+      <div className="absolute inset-0 pointer-events-none z-0">
+        <div className="absolute top-[-80px] left-[-80px] w-[300px] h-[300px] rounded-full bg-[#0B3768] blur-3xl opacity-60 animate-float1" />
+        <div className="absolute bottom-[-100px] right-[-100px] w-[350px] h-[350px] rounded-full bg-[#0066CC] blur-3xl opacity-40 animate-float2" />
+      </div>
       {/* Sidebar */}
-      <div className="fixed inset-y-0 left-0 w-64 bg-[#003366] text-white">
-        <div className="flex flex-col h-full">
-          <div className="p-6">
-            <h1 className="text-2xl font-bold">Case Worker Portal</h1>
-          </div>
-          <nav className="flex-1 px-4 space-y-2">
-            <button
-              onClick={() => setActiveSection('new-request')}
-              className={`flex items-center w-full px-4 py-3 rounded-lg transition-colors ${
-                activeSection === 'new-request'
-                  ? 'bg-[#0066CC] text-white'
-                  : 'text-white/80 hover:bg-[#0066CC]/20'
-              }`}
-            >
-              <FaClipboardList className="w-6 h-6 mr-3" />
-              New Request
-            </button>
-            <button
-              onClick={() => setActiveSection('dashboard')}
-              className={`flex items-center w-full px-4 py-3 rounded-lg transition-colors ${
-                activeSection === 'dashboard'
-                  ? 'bg-[#0066CC] text-white'
-                  : 'text-white/80 hover:bg-[#0066CC]/20'
-              }`}
-            >
-              <FaChartBar className="w-6 h-6 mr-3" />
-              Dashboard
-            </button>
-          </nav>
-          <div className="p-4">
-            <button
-              onClick={handleLogout}
-              className="flex items-center w-full px-4 py-3 rounded-lg text-white/80 hover:bg-[#0066CC]/20 transition-colors"
-            >
-              <FaSignOutAlt className="w-6 h-6 mr-3" />
-              Logout
-            </button>
-          </div>
+      <aside className="fixed inset-y-0 left-0 w-64 bg-gradient-to-br from-[#18345b]/95 via-[#0B3768]/90 to-[#18345b]/95 shadow-2xl border-r-2 border-white/10 rounded-none lg:rounded-r-2xl z-10 flex flex-col h-full">
+        <div className="p-8 flex flex-col items-center">
+          <h1 className="text-3xl font-extrabold text-white mb-6">Case Worker Portal</h1>
         </div>
-      </div>
-
+        <nav className="flex-1 px-4 space-y-2">
+          <button
+            onClick={() => setActiveSection('new-request')}
+            className={`flex items-center w-full px-4 py-3 rounded-lg transition-colors text-lg font-semibold focus:outline-none focus:ring-2 focus:ring-[#0066CC] focus:ring-offset-2 ${activeSection === 'new-request' ? 'bg-[#0066CC] text-white' : 'text-white/80 hover:bg-[#0066CC]/20'}`}
+            aria-label="New Request"
+          >
+            <FaClipboardList className="w-6 h-6 mr-3" aria-hidden />
+            New Request
+          </button>
+          <button
+            onClick={() => setActiveSection('dashboard')}
+            className={`flex items-center w-full px-4 py-3 rounded-lg transition-colors text-lg font-semibold focus:outline-none focus:ring-2 focus:ring-[#0066CC] focus:ring-offset-2 ${activeSection === 'dashboard' ? 'bg-[#0066CC] text-white' : 'text-white/80 hover:bg-[#0066CC]/20'}`}
+            aria-label="Dashboard"
+          >
+            <FaChartBar className="w-6 h-6 mr-3" aria-hidden />
+            Dashboard
+          </button>
+        </nav>
+        <div className="p-4 mt-auto">
+          <button
+            onClick={handleLogout}
+            className="flex items-center w-full px-4 py-3 rounded-lg text-white/80 hover:bg-[#0066CC]/20 transition-colors focus:outline-none focus:ring-2 focus:ring-[#0066CC] focus:ring-offset-2"
+            aria-label="Logout"
+          >
+            <FaSignOutAlt className="w-6 h-6 mr-3" aria-hidden />
+            Logout
+          </button>
+        </div>
+      </aside>
       {/* Main Content */}
-      <div className="ml-64 p-8">
-        {renderContent()}
-      </div>
+      <main className="ml-64 p-8 flex-1 z-10">
+        <div className="max-w-7xl mx-auto">
+          {renderContent()}
+        </div>
+      </main>
     </div>
   );
 } 
