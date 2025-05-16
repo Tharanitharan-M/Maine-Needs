@@ -5,10 +5,10 @@ import { useAuth } from '@/context/AuthContext';
 import { useRouter } from 'next/navigation';
 import { signOut } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
-import { HomeIcon, UsersIcon, ClipboardDocumentListIcon, ArrowRightOnRectangleIcon } from '@heroicons/react/24/outline';
-import { Dashboard, UserManagement, Requests } from './components';
+import { HomeIcon, UsersIcon, ClipboardDocumentListIcon, ArrowRightOnRectangleIcon, DocumentDuplicateIcon } from '@heroicons/react/24/outline';
+import { Dashboard, UserManagement, Requests, FormEditor } from './components';
 
-type Section = 'dashboard' | 'users' | 'requests';
+type Section = 'dashboard' | 'users' | 'requests' | 'form-editor';
 
 export default function AdminDashboard() {
   const [activeSection, setActiveSection] = useState<Section>('dashboard');
@@ -42,6 +42,8 @@ export default function AdminDashboard() {
         return <UserManagement />;
       case 'requests':
         return <Requests />;
+      case 'form-editor':
+        return <FormEditor />;
       default:
         return null;
     }
@@ -83,6 +85,14 @@ export default function AdminDashboard() {
           >
             <ClipboardDocumentListIcon className="w-6 h-6 mr-3" aria-hidden />
             Requests
+          </button>
+          <button
+            onClick={() => setActiveSection('form-editor')}
+            className={`flex items-center w-full px-4 py-3 rounded-lg transition-colors text-lg font-semibold focus:outline-none focus:ring-2 focus:ring-[#0066CC] focus:ring-offset-2 ${activeSection === 'form-editor' ? 'bg-[#0066CC] text-white' : 'text-white/80 hover:bg-[#0066CC]/20'}`}
+            aria-label="Form Editor"
+          >
+            <DocumentDuplicateIcon className="w-6 h-6 mr-3" aria-hidden />
+            Form Editor
           </button>
         </nav>
         <div className="p-4 mt-auto">

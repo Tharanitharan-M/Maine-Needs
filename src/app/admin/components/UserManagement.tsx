@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { adminAuth } from '@/lib/firebase-admin';
 import { Switch } from '@headlessui/react';
 import { MagnifyingGlassIcon, TrashIcon } from '@heroicons/react/24/outline';
-import { toast } from 'sonner';
+import toast from 'react-hot-toast';
 
 interface User {
   uid: string;

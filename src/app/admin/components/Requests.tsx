@@ -2,20 +2,11 @@
 
 import { useState, useEffect } from 'react';
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
-
-interface Request {
-  id: string;
-  title: string;
-  status: 'pending' | 'approved' | 'rejected';
-  createdAt: string;
-  caseworker: {
-    name: string;
-    email: string;
-  };
-}
+import { getDocs, collection, query, orderBy } from 'firebase/firestore';
+import { db } from '@/lib/firebase/firebase';
 
 export default function Requests() {
-  const [requests, setRequests] = useState<Request[]>([]);
+  const [requests, setRequests] = useState<any[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -23,49 +14,24 @@ export default function Requests() {
   useEffect(() => {
     const fetchRequests = async () => {
       try {
-        const response = await fetch('/api/admin/requests');
-        const data = await response.json();
-        if (response.ok) {
-          setRequests(data.requests);
-        } else {
-          setError(data.error || 'Failed to fetch requests');
-        }
+        const q = query(collection(db, 'requests'), orderBy('submittedAt', 'desc'));
+        const snapshot = await getDocs(q);
+        const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        setRequests(data);
       } catch (error) {
         setError('Failed to fetch requests');
       } finally {
         setLoading(false);
       }
     };
-
     fetchRequests();
   }, []);
 
-  const handleStatusChange = async (requestId: string, newStatus: 'approved' | 'rejected') => {
-    try {
-      const response = await fetch(`/api/admin/requests/${requestId}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ status: newStatus }),
-      });
-
-      if (response.ok) {
-        setRequests(requests.map(request => 
-          request.id === requestId ? { ...request, status: newStatus } : request
-        ));
-      } else {
-        setError('Failed to update request status');
-      }
-    } catch (error) {
-      setError('Failed to update request status');
-    }
-  };
-
+  // Simple search: search all string values in the request
   const filteredRequests = requests.filter(request =>
-    request.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    request.caseworker.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    request.caseworker.email.toLowerCase().includes(searchQuery.toLowerCase())
+    Object.values(request)
+      .filter(v => typeof v === 'string')
+      .some(v => v.toLowerCase().includes(searchQuery.toLowerCase()))
   );
 
   if (loading) {
@@ -87,13 +53,11 @@ export default function Requests() {
   return (
     <div className="space-y-6">
       <h2 className="text-2xl font-bold text-[#003366]">Requests</h2>
-
       {error && (
         <div className="p-4 bg-red-50 border border-red-200 text-red-600 rounded-md">
           {error}
         </div>
       )}
-
       <div className="bg-white p-6 rounded-lg shadow">
         <div className="mb-4">
           <div className="relative">
@@ -107,72 +71,29 @@ export default function Requests() {
             <MagnifyingGlassIcon className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
           </div>
         </div>
-
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Request
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Caseworker
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Status
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Date
-                </th>
-                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Actions
-                </th>
+                {requests[0] && Object.keys(requests[0]).map(key => (
+                  key !== 'id' && (
+                    <th key={key} className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      {key}
+                    </th>
+                  )
+                ))}
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
               {filteredRequests.map((request) => (
                 <tr key={request.id}>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {request.title}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    <div>
-                      <div className="font-medium">{request.caseworker.name}</div>
-                      <div className="text-gray-500">{request.caseworker.email}</div>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                      request.status === 'approved'
-                        ? 'bg-green-100 text-green-800'
-                        : request.status === 'rejected'
-                        ? 'bg-red-100 text-red-800'
-                        : 'bg-yellow-100 text-yellow-800'
-                    }`}>
-                      {request.status.charAt(0).toUpperCase() + request.status.slice(1)}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {new Date(request.createdAt).toLocaleDateString()}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                    {request.status === 'pending' && (
-                      <div className="space-x-2">
-                        <button
-                          onClick={() => handleStatusChange(request.id, 'approved')}
-                          className="text-green-600 hover:text-green-900"
-                        >
-                          Approve
-                        </button>
-                        <button
-                          onClick={() => handleStatusChange(request.id, 'rejected')}
-                          className="text-red-600 hover:text-red-900"
-                        >
-                          Reject
-                        </button>
-                      </div>
-                    )}
-                  </td>
+                  {Object.keys(request).map(key => (
+                    key !== 'id' && (
+                      <td key={key} className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        {key === 'submittedAt' ? new Date(request[key]).toLocaleString() : String(request[key])}
+                      </td>
+                    )
+                  ))}
                 </tr>
               ))}
             </tbody>
