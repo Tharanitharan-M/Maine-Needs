@@ -104,12 +104,12 @@ export default function AdminLoginPage() {
   };
 
   return (
-    <div className="relative min-h-screen flex overflow-hidden bg-gradient-to-br from-[#e0e7ff] via-[#f5f7fa] to-[#c7d2fe]">
+    <div className="relative min-h-screen h-screen w-screen flex overflow-hidden bg-gradient-to-br from-[#e0e7ff] via-[#f5f7fa] to-[#c7d2fe]">
       {/* Animated floating shapes background */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 0.2 }}
-        className="absolute inset-0 pointer-events-none z-0"
+        className="absolute inset-0 pointer-events-none z-0 w-full h-full"
       >
         <motion.div
           className="absolute top-[-80px] left-[-80px] w-[300px] h-[300px] rounded-full bg-[#0B3768] blur-3xl opacity-60"
