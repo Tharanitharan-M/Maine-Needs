@@ -6,8 +6,10 @@ import { getFormConfig } from '@/lib/firebase/form';
 import toast from 'react-hot-toast';
 import { addDoc, collection } from 'firebase/firestore';
 import { db } from '@/lib/firebase/firebase';
+import { useAuth } from '@/context/AuthContext';
 
 export default function NewRequest() {
+  const { user } = useAuth();
   const [formConfig, setFormConfig] = useState<FormConfig | null>(null);
   const [formData, setFormData] = useState<Record<string, any>>({});
   const [isLoading, setIsLoading] = useState(true);
@@ -150,10 +152,18 @@ export default function NewRequest() {
     try {
       await addDoc(collection(db, 'requests'), {
         ...formData,
+        status: 'pending',
         submittedAt: new Date().toISOString(),
+        caseworker: user
+          ? {
+              name: user.displayName || user.email || '',
+              email: user.email || '',
+              uid: user.uid,
+            }
+          : {},
       });
       toast.success('Form submitted successfully');
-      setFormData({}); // Optionally reset form
+      setFormData({});
     } catch (err) {
       toast.error('Failed to submit request');
       console.error(err);
@@ -213,4 +223,4 @@ export default function NewRequest() {
       </form>
     </div>
   );
-} 
+}

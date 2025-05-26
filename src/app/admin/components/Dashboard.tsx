@@ -6,6 +6,8 @@ import {
   ClockIcon,
   CheckCircleIcon,
 } from '@heroicons/react/24/outline';
+import { getDocs, collection, query, where } from 'firebase/firestore';
+import { db } from '@/lib/firebase/firebase';
 
 interface DashboardStats {
   totalUsers: number;
@@ -24,15 +26,38 @@ export default function Dashboard() {
 
   useEffect(() => {
     const fetchStats = async () => {
+      setLoading(true);
+      setError('');
       try {
-        const response = await fetch('/api/admin/stats');
-        const data = await response.json();
-        if (response.ok) {
-          setStats(data);
-        } else {
-          setError(data.error || 'Failed to fetch dashboard statistics');
-        }
-      } catch (error) {
+        // Count users (caseworkers)
+        const usersSnap = await getDocs(collection(db, 'users'));
+        const totalUsers = usersSnap.size;
+
+        // Count pending requests
+        const pendingSnap = await getDocs(query(collection(db, 'requests'), where('status', '==', 'pending')));
+        const pendingRequests = pendingSnap.size;
+
+        // Count completed today
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const completedSnap = await getDocs(query(collection(db, 'requests'), where('status', '==', 'approved')));
+        const completedToday = completedSnap.docs.filter(doc => {
+          const submittedAt = doc.data().submittedAt;
+          if (!submittedAt) return false;
+          const date = new Date(submittedAt);
+          return (
+            date.getFullYear() === today.getFullYear() &&
+            date.getMonth() === today.getMonth() &&
+            date.getDate() === today.getDate()
+          );
+        }).length;
+
+        setStats({
+          totalUsers,
+          pendingRequests,
+          completedToday,
+        });
+      } catch (err) {
         setError('Failed to fetch dashboard statistics');
       } finally {
         setLoading(false);
@@ -108,4 +133,4 @@ export default function Dashboard() {
       </div>
     </div>
   );
-} 
+}
