@@ -18,9 +18,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className={`${inter.className} min-h-screen w-full`}>
         <AuthProvider>
-          {children}
+          <main className="flex-1 h-full w-full">
+            {children}
+          </main>
         </AuthProvider>
         <Toaster position="top-right" />
       </body>
