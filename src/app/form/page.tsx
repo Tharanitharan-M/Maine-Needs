@@ -7,7 +7,7 @@ import { useState } from 'react';
 import { FaClipboardList, FaChartBar, FaSignOutAlt } from 'react-icons/fa';
 import { NewRequest, Dashboard, RequestItemsForm } from './components';
 
-type Section = 'request-items' | 'new-request' | 'dashboard';
+type Section = 'request-items' | 'dashboard';
 
 export default function FormPage() {
   const router = useRouter();
@@ -26,8 +26,6 @@ export default function FormPage() {
     switch (activeSection) {
       case 'request-items':
         return <RequestItemsForm />;
-      case 'new-request':
-        return <NewRequest />;
       case 'dashboard':
         return <Dashboard />;
       default:
@@ -55,14 +53,6 @@ export default function FormPage() {
           >
             <FaClipboardList className="w-6 h-6 mr-3" aria-hidden />
             Request Items
-          </button>
-          <button
-            onClick={() => setActiveSection('new-request')}
-            className={`flex items-center w-full px-4 py-3 rounded-lg transition-colors text-lg font-semibold focus:outline-none focus:ring-2 focus:ring-[#0066CC] focus:ring-offset-2 ${activeSection === 'new-request' ? 'bg-[#0066CC] text-white' : 'text-white/80 hover:bg-[#0066CC]/20'}`}
-            aria-label="New Request"
-          >
-            <FaClipboardList className="w-6 h-6 mr-3" aria-hidden />
-            New Request
           </button>
           <button
             onClick={() => setActiveSection('dashboard')}

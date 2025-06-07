@@ -14,6 +14,7 @@ interface InventoryItem {
   category: string;
   location?: string;
   lastUpdated?: string;
+  tally?: number; // <-- add tally field
 }
 
 const CATEGORY_OPTIONS = [
@@ -80,6 +81,7 @@ export default function Inventory() {
       } else {
         await addDoc(collection(db, 'inventory'), {
           ...form,
+          tally: 0, // <-- initialize tally on add
           lastUpdated: new Date().toISOString(),
         });
         toast.success('Item added');
@@ -339,23 +341,25 @@ export default function Inventory() {
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
-                  <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Name</th>
-                  <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Description</th>
-                  <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Quantity</th>
-                  <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Category</th>
-                  <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Location</th>
-                  <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+                  <th className="px-4 py-2 text-left text-xs font-semibold text-[#003366] uppercase tracking-wide">Name</th>
+                  <th className="px-4 py-2 text-left text-xs font-semibold text-[#003366] uppercase tracking-wide">Description</th>
+                  <th className="px-4 py-2 text-left text-xs font-semibold text-[#003366] uppercase tracking-wide">Quantity</th>
+                  <th className="px-4 py-2 text-left text-xs font-semibold text-[#003366] uppercase tracking-wide">Category</th>
+                  <th className="px-4 py-2 text-left text-xs font-semibold text-[#003366] uppercase tracking-wide">Location</th>
+                  <th className="px-4 py-2 text-left text-xs font-semibold text-[#003366] uppercase tracking-wide">Tally</th>
+                  <th className="px-4 py-2 text-left text-xs font-semibold text-[#003366] uppercase tracking-wide">Actions</th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
                 {filteredItems.map(item => (
-                  <tr key={item.id}>
-                    <td className="px-4 py-2">{item.name}</td>
-                    <td className="px-4 py-2">{item.description || '-'}</td>
-                    <td className="px-4 py-2">{item.quantity}</td>
-                    <td className="px-4 py-2">{item.category}</td>
-                    <td className="px-4 py-2">{item.location || '-'}</td>
-                    <td className="px-4 py-2 flex gap-2">
+                  <tr key={item.id} className={item.quantity <= 5 ? 'bg-yellow-50' : ''}>
+                    <td className="px-4 py-2 font-semibold text-base text-[#003366]">{item.name}</td>
+                    <td className="px-4 py-2 text-sm text-gray-700">{item.description || '-'}</td>
+                    <td className={`px-4 py-2 text-base ${item.quantity <= 5 ? 'text-[#eab308] font-bold' : 'text-[#003366]'}`}>{item.quantity}</td>
+                    <td className="px-4 py-2 text-sm text-gray-700">{item.category || '-'}</td>
+                    <td className="px-4 py-2 text-sm text-gray-700">{item.location || '-'}</td>
+                    <td className="px-4 py-2 text-sm text-gray-700">{typeof item.tally === 'number' ? item.tally : 0}</td>
+                    <td className="px-4 py-2 text-sm text-gray-700">
                       <button onClick={() => handleEdit(item)} className="text-blue-600 hover:underline">Edit</button>
                       <button onClick={() => handleDelete(item.id!)} className="text-red-600 hover:underline">Delete</button>
                     </td>
@@ -363,7 +367,7 @@ export default function Inventory() {
                 ))}
                 {filteredItems.length === 0 && (
                   <tr>
-                    <td colSpan={6} className="text-center py-8 text-gray-400">No inventory items found.</td>
+                    <td colSpan={7} className="text-center py-8 text-gray-400">No inventory items found.</td>
                   </tr>
                 )}
               </tbody>
