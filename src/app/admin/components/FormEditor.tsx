@@ -246,8 +246,42 @@ function SortableField({ field, isEditing, onEdit, onDelete, onUpdate, onGroupCh
 // Default config for new/empty form
 const defaultFormConfig: FormConfig = {
   id: 'default-form',
-  title: 'Default Form',
-  fields: [],
+  title: 'Request Form',
+  description: 'Submit a request for items needed by your client.',
+  fields: [
+    {
+      id: 'clientName',
+      type: 'text',
+      label: 'Client Name',
+      required: true,
+      placeholder: 'Enter client name',
+      group: 'Client Info',
+    },
+    {
+      id: 'clientAge',
+      type: 'number',
+      label: 'Client Age',
+      required: false,
+      placeholder: 'Enter client age',
+      group: 'Client Info',
+    },
+    {
+      id: 'items',
+      type: 'textarea',
+      label: 'Requested Items',
+      required: true,
+      placeholder: 'List items needed (one per line)',
+      group: 'Request Details',
+    },
+    {
+      id: 'notes',
+      type: 'textarea',
+      label: 'Additional Notes',
+      required: false,
+      placeholder: 'Any special instructions or context?',
+      group: 'Request Details',
+    },
+  ],
   createdAt: Date.now(),
   updatedAt: Date.now(),
 };
@@ -510,4 +544,4 @@ export default function FormEditor() {
       ))}
     </div>
   );
-} 
+}

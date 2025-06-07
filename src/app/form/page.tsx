@@ -5,13 +5,13 @@ import { auth } from '@/lib/firebase';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { FaClipboardList, FaChartBar, FaSignOutAlt } from 'react-icons/fa';
-import { NewRequest, Dashboard } from './components';
+import { NewRequest, Dashboard, RequestItemsForm } from './components';
 
-type Section = 'new-request' | 'dashboard';
+type Section = 'request-items' | 'dashboard';
 
 export default function FormPage() {
   const router = useRouter();
-  const [activeSection, setActiveSection] = useState<Section>('new-request');
+  const [activeSection, setActiveSection] = useState<Section>('request-items');
 
   const handleLogout = async () => {
     try {
@@ -24,8 +24,8 @@ export default function FormPage() {
 
   const renderContent = () => {
     switch (activeSection) {
-      case 'new-request':
-        return <NewRequest />;
+      case 'request-items':
+        return <RequestItemsForm />;
       case 'dashboard':
         return <Dashboard />;
       default:
@@ -47,12 +47,12 @@ export default function FormPage() {
         </div>
         <nav className="flex-1 px-4 space-y-2">
           <button
-            onClick={() => setActiveSection('new-request')}
-            className={`flex items-center w-full px-4 py-3 rounded-lg transition-colors text-lg font-semibold focus:outline-none focus:ring-2 focus:ring-[#0066CC] focus:ring-offset-2 ${activeSection === 'new-request' ? 'bg-[#0066CC] text-white' : 'text-white/80 hover:bg-[#0066CC]/20'}`}
-            aria-label="New Request"
+            onClick={() => setActiveSection('request-items')}
+            className={`flex items-center w-full px-4 py-3 rounded-lg transition-colors text-lg font-semibold focus:outline-none focus:ring-2 focus:ring-[#0066CC] focus:ring-offset-2 ${activeSection === 'request-items' ? 'bg-[#0066CC] text-white' : 'text-white/80 hover:bg-[#0066CC]/20'}`}
+            aria-label="Request Items"
           >
             <FaClipboardList className="w-6 h-6 mr-3" aria-hidden />
-            New Request
+            Request Items
           </button>
           <button
             onClick={() => setActiveSection('dashboard')}
@@ -82,4 +82,4 @@ export default function FormPage() {
       </main>
     </div>
   );
-} 
+}

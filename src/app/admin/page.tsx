@@ -5,13 +5,13 @@ import { useAuth } from '@/context/AuthContext';
 import { useRouter } from 'next/navigation';
 import { signOut } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
-import { HomeIcon, UsersIcon, ClipboardDocumentListIcon, ArrowRightOnRectangleIcon, DocumentDuplicateIcon } from '@heroicons/react/24/outline';
-import { Dashboard, UserManagement, Requests, FormEditor } from './components';
+import { HomeIcon, ClipboardDocumentListIcon, ArrowRightOnRectangleIcon, DocumentDuplicateIcon } from '@heroicons/react/24/outline';
+import { Inventory, Requests } from './components';
 
-type Section = 'dashboard' | 'users' | 'requests' | 'form-editor';
+type Section = 'inventory' | 'requests';
 
-export default function AdminDashboard() {
-  const [activeSection, setActiveSection] = useState<Section>('dashboard');
+export default function AdminPage() {
+  const [activeSection, setActiveSection] = useState<Section>('inventory');
   const { isAdmin } = useAuth();
   const router = useRouter();
 
@@ -36,14 +36,10 @@ export default function AdminDashboard() {
 
   const renderContent = () => {
     switch (activeSection) {
-      case 'dashboard':
-        return <Dashboard />;
-      case 'users':
-        return <UserManagement />;
+      case 'inventory':
+        return <Inventory />;
       case 'requests':
         return <Requests />;
-      case 'form-editor':
-        return <FormEditor />;
       default:
         return null;
     }
@@ -59,24 +55,16 @@ export default function AdminDashboard() {
       {/* Sidebar */}
       <aside className="fixed inset-y-0 left-0 w-64 bg-gradient-to-br from-[#18345b]/95 via-[#0B3768]/90 to-[#18345b]/95 shadow-2xl border-r-2 border-white/10 rounded-none lg:rounded-r-2xl z-10 flex flex-col h-full">
         <div className="p-8 flex flex-col items-center">
-          <h1 className="text-3xl font-extrabold text-white mb-6">Admin Panel</h1>
+          <h1 className="text-3xl font-extrabold text-white mb-6">Admin Portal</h1>
         </div>
         <nav className="flex-1 px-4 space-y-2">
           <button
-            onClick={() => setActiveSection('dashboard')}
-            className={`flex items-center w-full px-4 py-3 rounded-lg transition-colors text-lg font-semibold focus:outline-none focus:ring-2 focus:ring-[#0066CC] focus:ring-offset-2 ${activeSection === 'dashboard' ? 'bg-[#0066CC] text-white' : 'text-white/80 hover:bg-[#0066CC]/20'}`}
-            aria-label="Dashboard"
+            onClick={() => setActiveSection('inventory')}
+            className={`flex items-center w-full px-4 py-3 rounded-lg transition-colors text-lg font-semibold focus:outline-none focus:ring-2 focus:ring-[#0066CC] focus:ring-offset-2 ${activeSection === 'inventory' ? 'bg-[#0066CC] text-white' : 'text-white/80 hover:bg-[#0066CC]/20'}`}
+            aria-label="Inventory"
           >
-            <HomeIcon className="w-6 h-6 mr-3" aria-hidden />
-            Dashboard
-          </button>
-          <button
-            onClick={() => setActiveSection('users')}
-            className={`flex items-center w-full px-4 py-3 rounded-lg transition-colors text-lg font-semibold focus:outline-none focus:ring-2 focus:ring-[#0066CC] focus:ring-offset-2 ${activeSection === 'users' ? 'bg-[#0066CC] text-white' : 'text-white/80 hover:bg-[#0066CC]/20'}`}
-            aria-label="Manage Users"
-          >
-            <UsersIcon className="w-6 h-6 mr-3" aria-hidden />
-            Manage Users
+            <span className="w-6 h-6 mr-3" aria-hidden>📦</span>
+            Inventory
           </button>
           <button
             onClick={() => setActiveSection('requests')}
@@ -85,14 +73,6 @@ export default function AdminDashboard() {
           >
             <ClipboardDocumentListIcon className="w-6 h-6 mr-3" aria-hidden />
             Requests
-          </button>
-          <button
-            onClick={() => setActiveSection('form-editor')}
-            className={`flex items-center w-full px-4 py-3 rounded-lg transition-colors text-lg font-semibold focus:outline-none focus:ring-2 focus:ring-[#0066CC] focus:ring-offset-2 ${activeSection === 'form-editor' ? 'bg-[#0066CC] text-white' : 'text-white/80 hover:bg-[#0066CC]/20'}`}
-            aria-label="Form Editor"
-          >
-            <DocumentDuplicateIcon className="w-6 h-6 mr-3" aria-hidden />
-            Form Editor
           </button>
         </nav>
         <div className="p-4 mt-auto">
@@ -114,4 +94,4 @@ export default function AdminDashboard() {
       </main>
     </div>
   );
-} 
+}
