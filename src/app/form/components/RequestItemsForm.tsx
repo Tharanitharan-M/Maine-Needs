@@ -164,7 +164,7 @@ export default function RequestItemsForm() {
                   {item.category &&
                     availableInventory.map(inv => (
                       <option key={inv.id} value={inv.id}>
-                        {inv.name} (Available: {inv.quantity})
+                        {inv.name} {inv.description ? `(${inv.description})` : ''}
                       </option>
                     ))}
                 </select>

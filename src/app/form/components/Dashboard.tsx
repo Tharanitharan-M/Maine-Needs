@@ -149,7 +149,7 @@ export default function Dashboard() {
                               {Array.isArray(fam.items)
                                 ? fam.items.map((item: any, i: number) => (
                                     <span key={i}>
-                                      {item.name} {item.quantity ? `x${item.quantity}` : ''}
+                                      {item.name} {item.description ? `(${item.description})` : item.quantity ? `x${item.quantity}` : ''}
                                       {i < fam.items.length - 1 ? ', ' : ''}
                                     </span>
                                   ))
@@ -172,7 +172,7 @@ export default function Dashboard() {
                           {Array.isArray(request.items)
                             ? request.items.map((item: any, idx: number) => (
                                 <span key={idx}>
-                                  {item.name} {item.quantity ? `x${item.quantity}` : ''}
+                                  {item.name} {item.description ? `(${item.description})` : item.quantity ? `x${item.quantity}` : ''}
                                   {idx < request.items.length - 1 ? ', ' : ''}
                                 </span>
                               ))
